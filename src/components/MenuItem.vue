@@ -1,5 +1,5 @@
 <template>
-  <router-link class="wrapper" tag="div" :to="toRoute">
+  <router-link class="wrapper" tag="div" :to="{name: toRoute}">
     <div class="content hlp__img-cover">
       <slot></slot>
     </div>

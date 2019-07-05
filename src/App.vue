@@ -81,7 +81,7 @@ html, body {
   top: 5%;
   left: 5%;
   font-weight: bold;
-  z-index: 2;
+  z-index: 3;
 }
 
 .title--simple {
