@@ -1,0 +1,50 @@
+@import './_mixins.scss';
+
+.hlp__posrel {
+  position: relative;
+}
+
+.hlp__img-cover {
+  img {
+    @extend %imageCover;
+  }
+}
+
+.hlp__text-center {
+  text-align: center;
+}
+
+.hlp__img-responsive {
+  height: auto;
+  width: 100%;
+}
+
+.hlp__img-contain {
+  img {
+    @include squared(100%);
+    object-fit: contain;    
+  }
+}
+
+.hlp__wmax-40 {
+  max-width: 40%;
+}
+
+.hlp__preline {
+  white-space: pre-line;
+}
+
+.hlp__hide-overflow {
+  overflow: hidden;
+}
+
+.hlp__abs-vertical-align {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hlp__container-noflex {
+  width: 100%;
+}
+
