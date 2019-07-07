@@ -1,27 +1,14 @@
 <template>
     <div class="catalog">
         <div class="catalog__content">
-        <!-- <div class="title--simple" style="margin-top: 30px;">
-            Register now
-        </div> -->
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. In ipsum eius corrupti, ipsa, tempora provident excepturi, quod totam nobis a quisquam laboriosam architecto est!
-
-        <!-- <div class="form">
-            <input-custom
-            label="Name"
-            :isRequired="true"></input-custom>
-            <input-custom
-            label="Last name"
-            :isRequired="true"></input-custom>
-            <input-custom
-            label="Last name"
-            :isRequired="true"></input-custom>
-        </div> -->
-        <Furniture
-        toRoute="home"
-        label="Home"
-        nameFurniture="Lino"></Furniture>
-    </div>
+        <div class="title--simple" style="margin-top: 30px;">
+            Catálogo de productos
+        </div>
+            <Furniture
+            toRoute="lino"
+            label="Lino"
+            nameFurniture="Lino"></Furniture>
+        </div>
     </div>
 </template>
 
@@ -63,12 +50,13 @@ export default {
     background: rgba(20, 20, 20, 0.8);
     z-index: 2;
   }
-  .catalog__content {
+  
+}
+.catalog__content {
     font-size: 18px; 
     z-index: 3;
     color: white;
     position: relative; 
     font-weight: normal;
-  }   
-}
+}   
 </style>
