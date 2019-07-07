@@ -1,7 +1,6 @@
 <template>
     <router-link tag="div" :to="{name: toRoute}">
     <div class="image__container">
-        
         <div class="furniture__image"><img src="https://famsa_imagenes2.storage.googleapis.com/245061024NOVARA.LI.CHO.jpg" alt="Mueble"></div>
         <div class="furniture__description">
             <div class="furniture__title">{{nameFurniture}}</div>
@@ -15,7 +14,7 @@
 import {TweenLite, Power2, Elastic, TimelineLite} from "gsap/TweenMax";
 
 export default {
-    name: 'home',
+    name: 'furniture',
     components: {
     },
     props:{
@@ -47,6 +46,7 @@ export default {
         display: flex;
         flex-flow: column nowrap;
         overflow:hidden;
+        margin: 15px;
     }
     
     .furniture__image {
