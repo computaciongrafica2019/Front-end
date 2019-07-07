@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Register from './views/Register.vue'
 import Catalog from './views/Catalog.vue'
+import Lino from './views/Lino.vue'
 
 
 Vue.use(Router)
@@ -27,6 +28,11 @@ export default new Router({
       path: '/catalog',
       name: 'catalog',
       component: Catalog
+    },
+    {
+      path: '/lino',
+      name: 'lino',
+      component: Lino
     }
   ]
 })
