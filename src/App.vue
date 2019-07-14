@@ -33,6 +33,41 @@ export default {
 }
 </script>
 
+<style type="text/css">
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #f3784d;
+}
+::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+</style>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+HK:700&display=swap');
@@ -82,12 +117,6 @@ html, body {
   left: 5%;
   font-weight: bold;
   z-index: 3;
-}
-
-.title--simple {
-  color: $color-orange;
-  font-size: 36px;
-  font-weight: bold;
 }
 
 </style>

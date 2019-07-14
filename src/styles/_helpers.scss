@@ -48,3 +48,11 @@
   width: 100%;
 }
 
+.hlp__container-svg {
+  svg {
+    @include squared(100%)
+  }
+}
+
+
+

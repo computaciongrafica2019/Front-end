@@ -14,8 +14,24 @@
           label="Last name"
           :isRequired="true"></input-custom>
         <input-custom
-          label="Last name"
+          label="Email"
+          type="email"
           :isRequired="true"></input-custom>
+        <input-custom
+          label="Password"
+          type="password"
+          :isRequired="true"></input-custom>
+
+        <!-- <range-custom
+          :minVal="200"
+          :maxVal="500"
+          v-model="test2"
+          label="Altura"
+          ></range-custom>
+        <select-custom
+          label="prueba"
+          v-model="test"
+          :options="options"></select-custom> -->
       </div>
     </div>
   </div>
@@ -23,10 +39,26 @@
 
 <script>
 import InputCustom from '../components/InputCustom.vue';
+import RangeCustom from '../components/RangeCustom.vue';
+import SelectCustom from '../components/SelectCustom.vue';
 
 export default {
+  data() {
+    return {
+      test: '',
+      test2: '',
+      options: [
+        {label: 'a', value: 1, bgColor: 'coral'},
+        {label: 'b', value: 2},
+        {label: 'c', value: 3},
+        {label: 'd', value: 4},
+      ]
+    }
+  },
   components: {
-    InputCustom
+    InputCustom,
+    RangeCustom,
+    SelectCustom
   }
 }
 </script>
@@ -67,15 +99,6 @@ export default {
   color: white;
   position: relative; 
   font-weight: normal;
-}
-
-.form {
-  display: flex;
-  flex-flow: row wrap;
-
-  .input-custom {
-    flex: 1 0 400px;
-  }
 }
 
 </style>

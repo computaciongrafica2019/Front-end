@@ -1,0 +1,39 @@
+.view__default {
+  background: #2A2A2A;
+  min-height: 100vh; 
+  padding: 8%;
+  position: relative;
+}
+
+.title--simple {
+  color: $color-orange;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 50px;
+}
+
+.title--centered {
+  text-align: center;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
+.title--spacer {
+  margin-top: 50px;
+}
+
+.subtitle {
+  font-size: 26px;
+  color: #696969;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.form {
+  display: flex;
+  flex-flow: row wrap;
+
+  div {
+    flex: 1 0 400px;
+  }
+}

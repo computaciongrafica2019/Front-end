@@ -10,14 +10,18 @@
 
       <div class="main__products">
         <div class="image__container">
-          <div class="main__image"></div>
+          <div class="main__image">
+            <img src="../assets/abc.jpg" alt="">
+          </div>
           <div class="main__description">
             <div class="main__title">Mueble 1</div>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore, maiores!
           </div>
         </div>
         <div class="image__container">
-          <div class="main__image"></div>
+          <div class="main__image">
+            <img src="../assets/xd.jpg" alt="">
+          </div>
           <div class="main__description">
             <div class="main__title">Mueble 2</div>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore, maiores!
@@ -36,6 +40,7 @@ import {TweenLite, Power2, Elastic, TimelineLite} from "gsap/TweenMax";
 export default {
   name: 'home',
   components: {
+    
   },
   mounted() {
     let pg = this.$refs.pg;
@@ -106,7 +111,29 @@ export default {
 
 .main__image {
   height: 392px;
-  border: 1px solid red;
+  position: relative;
+  // border: 1px solid red;
+
+  &::after {
+    position: absolute;
+    content: '';
+    @include squared(100%);
+    z-index: 1;
+    background: rgba(black, 0.4);
+    top: 0;
+    left: 0;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  &:hover:after {
+    background: rgba(black, 0.1);
+  }
+
+  img {
+    @include squared(100%);
+    object-fit: cover;
+  }
 }
 
 .main__title {

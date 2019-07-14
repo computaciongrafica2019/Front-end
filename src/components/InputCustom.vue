@@ -1,7 +1,7 @@
 <template>
   <div class="input-custom">
     <div class="input-custom__placeholder">{{ label }} <div class="input-custom--required" v-if="isRequired">*</div></div>
-    <input type="text" name="" id="">
+    <input :type="type" name="" id="">
   </div>
 </template>
 
@@ -14,6 +14,10 @@ export default {
     isRequired: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: 'text'
     }
   }
 }
@@ -25,16 +29,16 @@ export default {
   border-radius: 6px;
   background: rgba(black, 0.5);
   color: white;
-  height: 150px;
+  height: 130px;
   transition: 0.3s;
   position: relative;
-  margin: 3px;
+  margin: 1px;
 
   &:hover {
     background: rgba(white, 0.3);
   }
 
-  input {
+  input[type="text"], input[type="email"], input[type="password"] {
     @include squared(100%);
     background: transparent;
     border: 0;

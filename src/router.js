@@ -4,7 +4,8 @@ import Router from 'vue-router'
 // Views
 import Home from './views/Home.vue'
 import Register from './views/Register.vue'
-import Catalog from './views/Catalog.vue'
+import Catalog from './views/Catalog/Catalog.vue'
+import CatalogProduct from './views/Catalog/CatalogProduct.vue'
 import Lino from './views/Lino.vue'
 
 
@@ -27,7 +28,11 @@ export default new Router({
     {
       path: '/catalog',
       name: 'catalog',
-      component: Catalog
+      component: Catalog,
+    },
+    {
+      path: '/catalog/:product',
+      component: CatalogProduct
     },
     {
       path: '/lino',
