@@ -40,7 +40,7 @@
 
 .button {
   background: white;
-  color: transparent;
+  color: rgba(black, 0.8);
   text-transform: uppercase;
   width: 240px;
   height: 76px;
@@ -55,4 +55,14 @@
   &:hover {
     background: $color-orange;
   }
+}
+
+.modal__message {
+  @include squared(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
 }

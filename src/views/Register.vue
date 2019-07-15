@@ -45,6 +45,13 @@
           v-model="test"
           :options="options"></select-custom> -->
       </div>
+
+      <modal
+        ref="modal">
+        <div class="modal__message">
+          User successfully registered
+        </div>
+      </modal>
       
       <div class="button"
         @click="createUser">Register</div>
@@ -90,6 +97,10 @@ export default {
         'Cliente/Create', this.userData
       );  
 
+      console.log(res);
+    },
+    triggerModal() {
+      this.$refs.modal.triggerModal();
     }
   }
 }
