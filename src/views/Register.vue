@@ -9,16 +9,28 @@
       <div class="form">
         <input-custom
           label="Name"
+          v-model="userData.Nombres"
           :isRequired="true"></input-custom>
         <input-custom
           label="Last name"
+          v-model="userData.Apellidos"
+          :isRequired="true"></input-custom>
+        <input-custom
+          label="User name"
+          v-model="userData.NombreUsuario"
+          :isRequired="true"></input-custom>
+        <input-custom
+          label="Username"
+          v-model="userData.Telefono"
           :isRequired="true"></input-custom>
         <input-custom
           label="Email"
+          v-model="userData.CorreoElectronico"
           type="email"
           :isRequired="true"></input-custom>
         <input-custom
           label="Password"
+          v-model="userData.Contraseña"
           type="password"
           :isRequired="true"></input-custom>
 
@@ -33,6 +45,9 @@
           v-model="test"
           :options="options"></select-custom> -->
       </div>
+      
+      <div class="button"
+        @click="createUser">Register</div>
     </div>
   </div>
 </template>
@@ -41,12 +56,19 @@
 import InputCustom from '../components/InputCustom.vue';
 import RangeCustom from '../components/RangeCustom.vue';
 import SelectCustom from '../components/SelectCustom.vue';
+import API from '../http_common';
 
 export default {
   data() {
     return {
-      test: '',
-      test2: '',
+      userData: {
+        "CorreoElectronico": "hsmarta@unal.edu.co",
+        "NombreUsuario": "artinezss",
+        "Contraseña": "1234",
+        "Nombres": "Heyner",
+        "Apellidos": "Martinez",
+        "Telefono": 32423
+      },
       options: [
         {label: 'a', value: 1, bgColor: 'coral'},
         {label: 'b', value: 2},
@@ -59,6 +81,15 @@ export default {
     InputCustom,
     RangeCustom,
     SelectCustom
+  },
+  methods: {
+    async createUser() {
+      const res = await API.post(
+        'Cliente/Create', this.userData
+      );
+
+      console.log(res);
+    }
   }
 }
 </script>

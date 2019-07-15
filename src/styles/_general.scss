@@ -37,3 +37,22 @@
     flex: 1 0 400px;
   }
 }
+
+.button {
+  background: white;
+  color: transparent;
+  text-transform: uppercase;
+  width: 240px;
+  height: 76px;
+  text-align: center;
+  line-height: 76px;
+  transition: 0.3s;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 30px;
+
+  &:hover {
+    background: $color-orange;
+  }
+}
