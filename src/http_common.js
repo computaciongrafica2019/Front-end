@@ -1,5 +1,5 @@
 import axios from 'axios';
 
-export const HTTP = axios.create({
+export default HTTP = axios.create({
   baseURL: `http://localhost:65193/`,
 })
