@@ -56,7 +56,7 @@
 import InputCustom from '../components/InputCustom.vue';
 import RangeCustom from '../components/RangeCustom.vue';
 import SelectCustom from '../components/SelectCustom.vue';
-import API from '../http_common';
+import HTTP from '../http_common';
 
 export default {
   data() {
@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     async createUser() {
-      const res = await API.post(
+      const res = await HTTP.post(
         'Cliente/Create', this.userData
       );
 
