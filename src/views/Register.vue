@@ -56,6 +56,7 @@
 import InputCustom from '../components/InputCustom.vue';
 import RangeCustom from '../components/RangeCustom.vue';
 import SelectCustom from '../components/SelectCustom.vue';
+import Modal from '../components/Modal.vue';
 import {HTTP} from '../http_common';
 
 export default {
@@ -80,7 +81,8 @@ export default {
   components: {
     InputCustom,
     RangeCustom,
-    SelectCustom
+    SelectCustom,
+    Modal
   },
   methods: {
     async createUser() {
@@ -88,7 +90,6 @@ export default {
         'Cliente/Create', this.userData
       );  
 
-      console.log(res);
     }
   }
 }
