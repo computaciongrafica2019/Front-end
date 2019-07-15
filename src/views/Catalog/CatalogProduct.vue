@@ -51,8 +51,12 @@ import "babylonjs-loaders";
 
 import * as THREE from "three";
 import { MTLLoader, OBJLoader } from "three-obj-mtl-loader";
+import GLTFLoader from 'three-gltf-loader';
 
 var OrbitControls = require('three-orbit-controls')(THREE)
+// var OBJLoader2 =  require('wwobjloader2')(THREE);
+// import '../../loaderObj'
+// import 'wwobjloader2'
 
 import InputCustom from "../../components/InputCustom.vue";
 import RangeCustom from "../../components/RangeCustom.vue";
@@ -73,78 +77,95 @@ export default {
     };
   },
   mounted() {
-      let uob = 'https://www.babylonjs-playground.com/scenes/StanfordBunny.obj'
-			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 75, 500/500, 0.1, 1000 );
+     const canvas = document.querySelector('#canvas');
+  const renderer = new THREE.WebGLRenderer({canvas});
 
-			var renderer = new THREE.WebGLRenderer();
-			renderer.setSize( 500, 500 );
-			this.$refs.canvas.appendChild( renderer.domElement );
-			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
-			var cube = new THREE.Mesh( geometry, material );
-      var ambient = new THREE.AmbientLight(0xFFFFFF);
-            scene.add(ambient);
-      // scene.add( cube );
-      
-      let controls = new OrbitControls(camera, renderer.domElement)
-      // controls.addEventListener( 'change', () =>  {
-      //   renderer.render(scene, camera)
-      // });
+  const fov = 45;
+  const aspect = 2;  // the canvas default
+  const near = 0.1;
+  const far = 100;
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.set(0, 10, 20);
 
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.target.set(0, 5, 0);
+  controls.update();
 
-      var textureLoader = new THREE.TextureLoader();
-      var map = textureLoader.load('../../assets/wood.png');
-      var material = new THREE.MeshPhongMaterial({map: map});
-      var loader = new OBJLoader();
-      // loader.load( 'https://www.babylonjs-playground.com/scenes/StanfordBunny.obj', function ( object ) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('black');
 
-      //   // For any meshes in the model, add our material.
-      //   object.traverse( function ( node ) {
+  {
+    const planeSize = 40;
 
-      //     if ( node.isMesh ) node.material = material;
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.magFilter = THREE.NearestFilter;
+    const repeats = planeSize / 2;
+    texture.repeat.set(repeats, repeats);
 
-      //   } );
+    const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+    const planeMat = new THREE.MeshPhongMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+    });
+    const mesh = new THREE.Mesh(planeGeo, planeMat);
+    mesh.rotation.x = Math.PI * -.5;
+    scene.add(mesh);
+  }
 
-      //   // Add the model to the scene.
-      //   scene.add( object );
-      // } );
+  {
+    const skyColor = 0xB1E1FF;  // light blue
+    const groundColor = 0xB97A20;  // brownish orange
+    const intensity = 1;
+    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+    scene.add(light);
+  }
 
-      loader.load(uob , function(model) {
-          // model.traverse(function(child) {
-          //     if (child instanceof THREE.Mesh) {
-          //         child.material.color = new THREE.Color(0xff0000);
-          //     }
-          // });
-          model.position.set(0, 0, -53);
-          model.matrix.scale(10000)
+  {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 10, 0);
+    light.target.position.set(-5, 0, 0);
+    scene.add(light);
+    scene.add(light.target);
+  }
 
-          console.log(model.computeBoundingBox());
+  {
+    const objLoader = new OBJLoader2();
+    objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
+      const root = event.detail.loaderRootNode;
+      scene.add(root);
+    });
+  }
 
-          camera.lookAt(model.position)
-          scene.add(model);
-          window.model = model;
-          renderer.render(scene, camera);
-      });
-
-			camera.position.z = 5;
-      renderer.render(scene, camera)
-			// var animate = function () {
-			// 	requestAnimationFrame( animate );
-
-			// 	cube.rotation.x += 0.01;
-			// 	cube.rotation.y += 0.01;
-
-			// 	renderer.render( scene, camera );
-			// };
-
-      // animate();
-      
-    function animate() {
-        requestAnimationFrame( animate );
-        renderer.render( scene, camera );
+  function resizeRendererToDisplaySize(renderer) {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      renderer.setSize(width, height, false);
     }
-    animate();
+    return needResize;
+  }
+
+  function render() {
+
+    if (resizeRendererToDisplaySize(renderer)) {
+      const canvas = renderer.domElement;
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+    }
+
+    renderer.render(scene, camera);
+
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
   },
   components: {
     InputCustom,
