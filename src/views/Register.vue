@@ -93,11 +93,13 @@ export default {
   },
   methods: {
     async createUser() {
-      const res = await HTTP.post(
-        'Cliente/Create', this.userData
-      );  
+      // const res = await HTTP.post(
+      //   'Cliente/Create', this.userData
+      // );  
 
-      console.log(res);
+      // console.log(res);
+
+      this.triggerModal();
     },
     triggerModal() {
       this.$refs.modal.triggerModal();

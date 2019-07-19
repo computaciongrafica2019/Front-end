@@ -1,6 +1,8 @@
 <template>
-  <div class="input-custom">
-    <div class="input-custom__placeholder">{{ label }} <div class="input-custom--required" v-if="isRequired">*</div></div>
+  <div class="input-custom"
+    :style="{'height': tiny ? '80px' : ''}">
+    <div class="input-custom__placeholder"
+      :style="{'top': tiny ? '10px' : ''}">{{ label }} <div class="input-custom--required" v-if="isRequired">*</div></div>
     <input :type="type" name="" id="" :value="value" @input="handleInput">
   </div>
 </template>
@@ -21,6 +23,10 @@ export default {
     type: {
       type: String,
       default: 'text'
+    },
+    tiny: {
+      type: Boolean,
+      default: false
     }
   },
   model: {

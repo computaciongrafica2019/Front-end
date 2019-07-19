@@ -57,6 +57,12 @@
   }
 }
 
+.button--modal {
+  &:hover {
+    background: rgb(199, 199, 199);
+  }
+}
+
 .modal__message {
   @include squared(100%);
   display: flex;
@@ -65,4 +71,8 @@
   font-size: 28px;
   font-weight: bold;
   text-align: center;
+}
+
+.modal__message--vertical {
+  flex-flow: column;
 }

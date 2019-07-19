@@ -30,7 +30,6 @@
       </div>
     </div>
 
-    <div class="spacer"></div>
   </div>
 </template>
 
@@ -102,7 +101,6 @@ export default {
   align-items: flex-start;
 }
 
-
 .image__container {
   max-width: 255px;
   display: flex;
@@ -154,5 +152,15 @@ export default {
   line-height: 27px;
 }
 
+@media (max-width: 1090px) {
+  .home {
+    flex-flow: column nowrap;
+    overflow-y: auto;
+  }
+
+  .main__products {
+    flex-flow: row wrap;
+  }
+}
 
 </style>

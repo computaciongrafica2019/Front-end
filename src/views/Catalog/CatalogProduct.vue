@@ -1,6 +1,7 @@
 <template>
   <div class="catalog-product view__default">
-    <div class="title--simple title--centered title--spacer title--spacer">{{ product }}</div>
+    <div class="title--simple title--centered title--spacer title--spacer"
+      ref="title">{{ product }}</div>
 
     <div class="detail">
       <div id="canvas" ref="canvas">
@@ -42,6 +43,31 @@
       <range-custom :minVal="200" :maxVal="500" v-model="length" label="Length"></range-custom>
       <select-custom label="Color" v-model="test" :options="options"></select-custom>
     </div>
+
+  <base-modal
+    size="430px"
+    ref="modal">
+    <div class="modal__message modal__message--vertical"
+      v-if="showMessage">
+      <input-custom :tiny="true" label="Name" :isRequired="true"></input-custom>
+      <input-custom :tiny="true" label="Email" :isRequired="true"></input-custom>
+
+      <div class="button button--modal"
+        @click="requestPricing">Send request</div>
+    </div>
+
+    <div class="modal__message modal__thanks"
+      v-else>
+      {{ message }}
+
+      <div class="button button--modal"
+        style="margin-top: 30px"
+        @click="triggerModal(); showMessage = true">Close</div>
+    </div>
+  </base-modal>
+
+    <div class="button"
+      @click="triggerModal">Request pricing</div>
   </div>
 </template>
 
@@ -52,6 +78,8 @@ import "babylonjs-loaders";
 import * as THREE from "three";
 import { MTLLoader, OBJLoader } from "three-obj-mtl-loader";
 import GLTFLoader from 'three-gltf-loader';
+
+import { TweenMax } from 'gsap/TweenMax';
 
 var OrbitControls = require('three-orbit-controls')(THREE)
 // var OBJLoader2 =  require('wwobjloader2')(THREE);
@@ -65,6 +93,8 @@ import SelectCustom from "../../components/SelectCustom.vue";
 export default {
   data() {
     return {
+      showMessage: true,
+      message: 'Thank you for your interest! \n\n An email soon will arrive with all the information',
       test: "",
       product: "",
       length: "",
@@ -76,96 +106,113 @@ export default {
       ]
     };
   },
+  created() {
+    this.product = this.$route.params.product;
+  },
   mounted() {
-     const canvas = document.querySelector('#canvas');
-  const renderer = new THREE.WebGLRenderer({canvas});
+    TweenMax.from(this.$refs.title, 2, {
+      yPercent: -20,
+      opacity: 0
+    })
 
-  const fov = 45;
-  const aspect = 2;  // the canvas default
-  const near = 0.1;
-  const far = 100;
-  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 10, 20);
+    const canvas = document.querySelector('#canvas');
+    const renderer = new THREE.WebGLRenderer({canvas});
 
-  const controls = new THREE.OrbitControls(camera, canvas);
-  controls.target.set(0, 5, 0);
-  controls.update();
+    const fov = 45;
+    const aspect = 2;  // the canvas default
+    const near = 0.1;
+    const far = 100;
+    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera.position.set(0, 10, 20);
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color('black');
+    const controls = new THREE.OrbitControls(camera, canvas);
+    controls.target.set(0, 5, 0);
+    controls.update();
 
-  {
-    const planeSize = 40;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('black');
 
-    const loader = new THREE.TextureLoader();
-    const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.magFilter = THREE.NearestFilter;
-    const repeats = planeSize / 2;
-    texture.repeat.set(repeats, repeats);
+    {
+      const planeSize = 40;
 
-    const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
-    const planeMat = new THREE.MeshPhongMaterial({
-      map: texture,
-      side: THREE.DoubleSide,
-    });
-    const mesh = new THREE.Mesh(planeGeo, planeMat);
-    mesh.rotation.x = Math.PI * -.5;
-    scene.add(mesh);
-  }
+      const loader = new THREE.TextureLoader();
+      const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.magFilter = THREE.NearestFilter;
+      const repeats = planeSize / 2;
+      texture.repeat.set(repeats, repeats);
 
-  {
-    const skyColor = 0xB1E1FF;  // light blue
-    const groundColor = 0xB97A20;  // brownish orange
-    const intensity = 1;
-    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-    scene.add(light);
-  }
-
-  {
-    const color = 0xFFFFFF;
-    const intensity = 1;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(0, 10, 0);
-    light.target.position.set(-5, 0, 0);
-    scene.add(light);
-    scene.add(light.target);
-  }
-
-  {
-    const objLoader = new OBJLoader2();
-    objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
-      const root = event.detail.loaderRootNode;
-      scene.add(root);
-    });
-  }
-
-  function resizeRendererToDisplaySize(renderer) {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
+      const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+      const planeMat = new THREE.MeshPhongMaterial({
+        map: texture,
+        side: THREE.DoubleSide,
+      });
+      const mesh = new THREE.Mesh(planeGeo, planeMat);
+      mesh.rotation.x = Math.PI * -.5;
+      scene.add(mesh);
     }
-    return needResize;
-  }
 
-  function render() {
+    {
+      const skyColor = 0xB1E1FF;  // light blue
+      const groundColor = 0xB97A20;  // brownish orange
+      const intensity = 1;
+      const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+      scene.add(light);
+    }
 
-    if (resizeRendererToDisplaySize(renderer)) {
+    {
+      const color = 0xFFFFFF;
+      const intensity = 1;
+      const light = new THREE.DirectionalLight(color, intensity);
+      light.position.set(0, 10, 0);
+      light.target.position.set(-5, 0, 0);
+      scene.add(light);
+      scene.add(light.target);
+    }
+
+    {
+      const objLoader = new OBJLoader2();
+      objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
+        const root = event.detail.loaderRootNode;
+        scene.add(root);
+      });
+    }
+
+    function resizeRendererToDisplaySize(renderer) {
       const canvas = renderer.domElement;
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      camera.updateProjectionMatrix();
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const needResize = canvas.width !== width || canvas.height !== height;
+      if (needResize) {
+        renderer.setSize(width, height, false);
+      }
+      return needResize;
     }
 
-    renderer.render(scene, camera);
+    function render() {
+
+      if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+
+      renderer.render(scene, camera);
+
+      requestAnimationFrame(render);
+    }
 
     requestAnimationFrame(render);
-  }
-
-  requestAnimationFrame(render);
+  },
+  methods: {
+    requestPricing() {
+      // this.$refs.modal.toggleModal();
+      this.showMessage = !this.showMessage;
+    },
+    triggerModal() {
+      this.$refs.modal.toggleModal();
+    }
   },
   components: {
     InputCustom,
@@ -201,4 +248,12 @@ export default {
 .title--spacer {
   margin: 100px 0;
 }
+
+.modal__thanks {
+  white-space: pre-line;
+  flex-flow: column;
+  color: white;
+  padding: 30px;
+}
+
 </style>
