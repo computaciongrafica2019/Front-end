@@ -9,7 +9,8 @@
       </div>
 
       <div class="main__products">
-        <div class="image__container">
+        <div class="image__container"
+          @click="toItem(1)">
           <div class="main__image">
             <img src="../assets/abc.jpg" alt="">
           </div>
@@ -18,7 +19,9 @@
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore, maiores!
           </div>
         </div>
-        <div class="image__container">
+
+        <div class="image__container"
+          @click="toItem(2)">
           <div class="main__image">
             <img src="../assets/xd.jpg" alt="">
           </div>
@@ -50,6 +53,13 @@ export default {
         opacity: 0,
         ease: Elastic.easeOut.config(0.8, 0.3)
       });
+  },
+  methods: {
+    toItem(item) {
+      let tag = document.getElementsByClassName('main__title')[item - 1].textContent;
+
+      this.$router.push(`/catalog/${tag}`);
+    }
   }
 }
 </script>

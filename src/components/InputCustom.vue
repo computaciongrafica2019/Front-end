@@ -3,7 +3,7 @@
     :style="{'height': tiny ? '80px' : ''}">
     <div class="input-custom__placeholder"
       :style="{'top': tiny ? '10px' : ''}">{{ label }} <div class="input-custom--required" v-if="isRequired">*</div></div>
-    <input :type="type" name="" id="" :value="value" @input="handleInput">
+    <input :type="type" name="" :value="value" @input="handleInput">
   </div>
 </template>
 

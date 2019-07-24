@@ -5,7 +5,7 @@
 
     <div class="detail">
       <div id="canvas" ref="canvas">
-        <!-- <Scene>
+        <Scene>
           <Camera type="arcRotate" :radius="7.5" :beta="Math.PI / 3"></Camera>
           <HemisphericLight></HemisphericLight>
           <Asset
@@ -33,15 +33,28 @@
             :scaling="[0.02, 0.02, 0.02]"
             :position="[-2, 0, -0.5]"
           ></Asset>
-        </Scene>-->
+        </Scene>
       </div>
     </div>
 
     <div class="form">
-      <input-custom label="Width" :isRequired="true"></input-custom>
-      <input-custom label="Height" :isRequired="true"></input-custom>
-      <range-custom :minVal="200" :maxVal="500" v-model="length" label="Length"></range-custom>
-      <select-custom label="Color" v-model="test" :options="options"></select-custom>
+      <template
+        v-for="attr in attributes">
+
+        <range-custom 
+          :key="attr.Nombre"
+          v-if="attr.Tipo == 'Rango'"
+          :minVal="attr.ValorMinimo" :maxVal="attr.ValorMaximo" v-model="data[attr.Nombre]" :label="attr.Nombre"></range-custom>
+        <range-custom 
+          :key="attr.Nombre"
+          v-if="attr.Tipo == 'Porcentaje'"
+          :minVal="attr.ValorMinimo" :maxVal="attr.ValorMaximo" v-model="data[attr.Nombre]" :label="attr.Nombre" :step="0.01" unit="%"></range-custom>
+        <select-custom 
+          :key="attr.Nombre"
+          v-if="attr.Tipo == 'Seleccion'"
+          :label="attr.Nombre" v-model="data[attr.Nombre]" :options="generateOptions(attr.Valores)"></select-custom>
+
+      </template>
     </div>
 
   <base-modal
@@ -49,11 +62,15 @@
     ref="modal">
     <div class="modal__message modal__message--vertical"
       v-if="showMessage">
-      <input-custom :tiny="true" label="Name" :isRequired="true"></input-custom>
-      <input-custom :tiny="true" label="Email" :isRequired="true"></input-custom>
+      <input-custom :tiny="true" label="Name" :isRequired="true" v-model="name"></input-custom>
+      <input-custom :tiny="true" label="Email" :isRequired="true" v-model="email"></input-custom>
 
       <div class="button button--modal"
+        style="margin: 5px; margin-top: 15px"
         @click="requestPricing">Send request</div>
+      <div class="button button--modal"
+        style="margin: 5px"
+        @click="triggerModal">Close</div>
     </div>
 
     <div class="modal__message modal__thanks"
@@ -80,11 +97,9 @@ import { MTLLoader, OBJLoader } from "three-obj-mtl-loader";
 import GLTFLoader from 'three-gltf-loader';
 
 import { TweenMax } from 'gsap/TweenMax';
+import { HTTP } from '../../http_common';
 
 var OrbitControls = require('three-orbit-controls')(THREE)
-// var OBJLoader2 =  require('wwobjloader2')(THREE);
-// import '../../loaderObj'
-// import 'wwobjloader2'
 
 import InputCustom from "../../components/InputCustom.vue";
 import RangeCustom from "../../components/RangeCustom.vue";
@@ -94,7 +109,7 @@ export default {
   data() {
     return {
       showMessage: true,
-      message: 'Thank you for your interest! \n\n An email soon will arrive with all the information',
+      message: 'Thank you for your interest! \n\n An email will arrive soon with all the information',
       test: "",
       product: "",
       length: "",
@@ -103,115 +118,153 @@ export default {
         { label: "b", value: 2, bgColor: "blue" },
         { label: "c", value: 3, bgColor: "red" },
         { label: "d", value: 4 }
-      ]
+      ],
+      attributes: [],
+      data: {},
+      name: '',
+      email: ''
     };
   },
   created() {
     this.product = this.$route.params.product;
   },
-  mounted() {
+  async beforeMount() {
+    let product = this.$route.params.product;
+    const res = await HTTP.get(`/Atributos${product}/GetAll`);
+
+    this.attributes = res.data;
+    for (const attr of this.attributes) {
+      this.data[attr.Nombre] = ''
+    }
+  },
+  async mounted() {
+    
     TweenMax.from(this.$refs.title, 2, {
       yPercent: -20,
       opacity: 0
     })
 
-    const canvas = document.querySelector('#canvas');
-    const renderer = new THREE.WebGLRenderer({canvas});
+    // const canvas = document.querySelector('#canvas');
+    // const renderer = new THREE.WebGLRenderer({canvas});
 
-    const fov = 45;
-    const aspect = 2;  // the canvas default
-    const near = 0.1;
-    const far = 100;
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 10, 20);
+    // const fov = 45;
+    // const aspect = 2;  // the canvas default
+    // const near = 0.1;
+    // const far = 100;
+    // const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    // camera.position.set(0, 10, 20);
 
-    const controls = new THREE.OrbitControls(camera, canvas);
-    controls.target.set(0, 5, 0);
-    controls.update();
+    // const controls = new THREE.OrbitControls(camera, canvas);
+    // controls.target.set(0, 5, 0);
+    // controls.update();
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color('black');
+    // const scene = new THREE.Scene();
+    // scene.background = new THREE.Color('black');
 
-    {
-      const planeSize = 40;
+    // {
+    //   const planeSize = 40;
 
-      const loader = new THREE.TextureLoader();
-      const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.magFilter = THREE.NearestFilter;
-      const repeats = planeSize / 2;
-      texture.repeat.set(repeats, repeats);
+    //   const loader = new THREE.TextureLoader();
+    //   const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
+    //   texture.wrapS = THREE.RepeatWrapping;
+    //   texture.wrapT = THREE.RepeatWrapping;
+    //   texture.magFilter = THREE.NearestFilter;
+    //   const repeats = planeSize / 2;
+    //   texture.repeat.set(repeats, repeats);
 
-      const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
-      const planeMat = new THREE.MeshPhongMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-      });
-      const mesh = new THREE.Mesh(planeGeo, planeMat);
-      mesh.rotation.x = Math.PI * -.5;
-      scene.add(mesh);
-    }
+    //   const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+    //   const planeMat = new THREE.MeshPhongMaterial({
+    //     map: texture,
+    //     side: THREE.DoubleSide,
+    //   });
+    //   const mesh = new THREE.Mesh(planeGeo, planeMat);
+    //   mesh.rotation.x = Math.PI * -.5;
+    //   scene.add(mesh);
+    // }
 
-    {
-      const skyColor = 0xB1E1FF;  // light blue
-      const groundColor = 0xB97A20;  // brownish orange
-      const intensity = 1;
-      const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-      scene.add(light);
-    }
+    // {
+    //   const skyColor = 0xB1E1FF;  // light blue
+    //   const groundColor = 0xB97A20;  // brownish orange
+    //   const intensity = 1;
+    //   const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+    //   scene.add(light);
+    // }
 
-    {
-      const color = 0xFFFFFF;
-      const intensity = 1;
-      const light = new THREE.DirectionalLight(color, intensity);
-      light.position.set(0, 10, 0);
-      light.target.position.set(-5, 0, 0);
-      scene.add(light);
-      scene.add(light.target);
-    }
+    // {
+    //   const color = 0xFFFFFF;
+    //   const intensity = 1;
+    //   const light = new THREE.DirectionalLight(color, intensity);
+    //   light.position.set(0, 10, 0);
+    //   light.target.position.set(-5, 0, 0);
+    //   scene.add(light);
+    //   scene.add(light.target);
+    // }
 
-    {
-      const objLoader = new OBJLoader2();
-      objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
-        const root = event.detail.loaderRootNode;
-        scene.add(root);
-      });
-    }
+    // {
+    //   const objLoader = new OBJLoader2();
+    //   objLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
+    //     const root = event.detail.loaderRootNode;
+    //     scene.add(root);
+    //   });
+    // }
 
-    function resizeRendererToDisplaySize(renderer) {
-      const canvas = renderer.domElement;
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      const needResize = canvas.width !== width || canvas.height !== height;
-      if (needResize) {
-        renderer.setSize(width, height, false);
-      }
-      return needResize;
-    }
+    // function resizeRendererToDisplaySize(renderer) {
+    //   const canvas = renderer.domElement;
+    //   const width = canvas.clientWidth;
+    //   const height = canvas.clientHeight;
+    //   const needResize = canvas.width !== width || canvas.height !== height;
+    //   if (needResize) {
+    //     renderer.setSize(width, height, false);
+    //   }
+    //   return needResize;
+    // }
 
-    function render() {
+    // function render() {
 
-      if (resizeRendererToDisplaySize(renderer)) {
-        const canvas = renderer.domElement;
-        camera.aspect = canvas.clientWidth / canvas.clientHeight;
-        camera.updateProjectionMatrix();
-      }
+    //   if (resizeRendererToDisplaySize(renderer)) {
+    //     const canvas = renderer.domElement;
+    //     camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    //     camera.updateProjectionMatrix();
+    //   }
 
-      renderer.render(scene, camera);
+    //   renderer.render(scene, camera);
 
-      requestAnimationFrame(render);
-    }
+    //   requestAnimationFrame(render);
+    // }
 
-    requestAnimationFrame(render);
+    // requestAnimationFrame(render);
   },
   methods: {
-    requestPricing() {
+    async requestPricing() {
       // this.$refs.modal.toggleModal();
       this.showMessage = !this.showMessage;
+      let dataRequest = {}
+
+      for (const key in this.data) {
+        dataRequest[key.replace(/ /g, '')] = this.data[key];
+      }
+
+      dataRequest.NombreUsuario = 'Heyner';
+      dataRequest.CorreoElectronico = 'hsmarta@unal.edu.co';
+
+      let furniture = this.$route.params.product;
+      const res = await HTTP.post(`/${furniture}/Create`, dataRequest);
+      console.log(res);
     },
     triggerModal() {
       this.$refs.modal.toggleModal();
+    },
+    generateOptions(str) {
+      let elements = str.split(',');
+      return elements.map(elem => {
+        let baseObj = { 'label': elem, 'value': elem };
+
+        if (elem.includes('Oak'))    baseObj.bgColor = '#CBA078';
+        if (elem.includes('Cherry')) baseObj.bgColor = '#BC3B4D';
+        if (elem.includes('Walnut')) baseObj.bgColor = '#6A4332';
+
+        return baseObj;
+      });
     }
   },
   components: {
@@ -254,6 +307,12 @@ export default {
   flex-flow: column;
   color: white;
   padding: 30px;
+}
+
+.form {
+  div {
+    flex-basis: 400px;
+  }
 }
 
 </style>

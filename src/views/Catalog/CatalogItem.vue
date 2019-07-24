@@ -13,8 +13,8 @@
       <div class="catalog__description__title">{{ subtitle }}</div>
 
       <div class="catalog__description__row">
-        <div class="catalog__description__th">Materials</div>
-        <div class="catalog__description__td">{{ materials }}</div>
+        <div class="catalog__description__th">Colors</div>
+        <div class="catalog__description__td">{{ colors }}</div>
       </div>
       <div class="catalog__description__row">
         <div class="catalog__description__th">Description</div>
@@ -36,7 +36,7 @@ export default {
       type: String,
       default: 'No subtitle'
     },
-    materials: {
+    colors: {
       type: String,
       default: 'Iron, Metal and Battery'
     },

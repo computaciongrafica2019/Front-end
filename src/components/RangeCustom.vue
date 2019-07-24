@@ -13,6 +13,7 @@
         :min="minVal"
         :max="maxVal"
         :step="step"
+        @change="handleInput"
       />
     </div>
   </div>
