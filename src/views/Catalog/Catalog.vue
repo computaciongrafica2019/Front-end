@@ -16,9 +16,11 @@
         :description="furniture.Descripcion"
         :toRoute="'/catalog/' + furniture.TipoMueble + '?'"
         colors="Wood, Cherry and Oak">
-
-        <img src="../../assets/reference/fachada_home.jpg" alt="">
-        
+        <!-- <img :src="`../../../public/img_furnitures/${furniture['Ruta_de_una_imagen']}`" alt=""> -->
+        <img :src="`../../assets/src_furnitures/${furniture['Ruta_de_una_imagen']}`">
+        <!-- <img :src="`../../../public/img_furnitures/MuebleLavadero.png`"> -->
+        <!-- <img src="../../assets/src_furnitures/MuebleLavadero.png" alt=""> -->
+        {{  }}
       </catalog-item>
     </div>
 
@@ -34,7 +36,7 @@ import { HTTP } from '../../http_common';
 export default {
   data() {
     return {
-      furnitureList: []
+      furnitureList: [] 
     }
   },
   components: {
@@ -47,8 +49,8 @@ export default {
       }, 0.5)
 
     const res = await HTTP.get('/Mueble/GetAll');
-    this.furnitureList = res.data;
-    console.log(res);
+    this.furnitureList = res.data.slice(0, 6);
+    console.log(this.furnitureList);
   }
 }
 </script>

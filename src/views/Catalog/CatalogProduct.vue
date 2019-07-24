@@ -245,7 +245,12 @@ export default {
       }
 
       dataRequest.NombreUsuario = 'Heyner';
+      dataRequest['Apellidos'] = 'Martínez';
       dataRequest.CorreoElectronico = 'hsmarta@unal.edu.co';
+      dataRequest['Contraseña'] = '1234';
+      dataRequest['Telefono'] = '32423';
+      dataRequest['Telefono'] = '32423';
+  
 
       let furniture = this.$route.params.product;
       const res = await HTTP.post(`/${furniture}/Create`, dataRequest);

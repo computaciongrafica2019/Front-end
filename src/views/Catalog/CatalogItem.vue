@@ -68,8 +68,8 @@ export default {
   cursor: pointer;
 
   img {
-    object-fit: cover;
     @include squared(100%);
+    object-fit: cover;
   }
 
   &:after {
