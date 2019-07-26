@@ -16,11 +16,18 @@
         :description="furniture.Descripcion"
         :toRoute="'/catalog/' + furniture.TipoMueble + '?'"
         colors="Wood, Cherry and Oak">
-        <!-- <img :src="`../../../public/img_furnitures/${furniture['Ruta_de_una_imagen']}`" alt=""> -->
-        <img :src="`../../assets/src_furnitures/${furniture['Ruta_de_una_imagen']}`">
-        <!-- <img :src="`../../../public/img_furnitures/MuebleLavadero.png`"> -->
-        <!-- <img src="../../assets/src_furnitures/MuebleLavadero.png" alt=""> -->
-        {{  }}
+        <img
+          v-if="furniture.TipoMueble == 'Lavadero'" 
+          src="../../assets/srcfurnitures/MuebleLavadero.png">
+        <img
+          v-if="furniture.TipoMueble == 'Lino'" 
+          src="../../assets/srcfurnitures/MuebleLino.png">
+        <img
+          v-if="furniture.TipoMueble == 'MuebleTV'" 
+          src="../../assets/srcfurnitures/MuebleTV.png">
+        <img
+          v-if="furniture.TipoMueble == 'Vestier'" 
+          src="../../assets/srcfurnitures/Vestier.png">
       </catalog-item>
     </div>
 
@@ -42,15 +49,25 @@ export default {
   components: {
     CatalogItem
   },
+  async beforeMount() {
+    const res = await HTTP.get('/Mueble/GetAll');
+    this.furnitureList = res.data.slice(0, 6);
+    this.furnitureList.forEach(f => {
+      f['Ruta_de_una_imagen'] = '@assets/srcfurnitures/' + f['Ruta_de_una_imagen'];
+    });
+
+    console.log(this.furnitureList);
+  },
   async mounted() {
     TweenMax
       .staggerFrom('.catalog-item', 1, {
         scale: 0.8, yPercent: -20, opacity:0, delay:1, ease: Power2.easeOut
       }, 0.5)
-
-    const res = await HTTP.get('/Mueble/GetAll');
-    this.furnitureList = res.data.slice(0, 6);
-    console.log(this.furnitureList);
+  },
+  methods: {
+    getPath(name) {
+      return require('../../../public/imgfurnitures/' + name);
+    }
   }
 }
 </script>

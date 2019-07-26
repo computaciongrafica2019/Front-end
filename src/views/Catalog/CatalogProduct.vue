@@ -3,7 +3,7 @@
     <div class="title--simple title--centered title--spacer title--spacer"
       ref="title">{{ product }}</div>
 
-    <div class="detail">
+    <!-- <div class="detail">
       <div id="canvas" ref="canvas">
         <Scene>
           <Camera type="arcRotate" :radius="7.5" :beta="Math.PI / 3"></Camera>
@@ -35,7 +35,7 @@
           ></Asset>
         </Scene>
       </div>
-    </div>
+    </div> -->
 
     <div class="form">
       <template
